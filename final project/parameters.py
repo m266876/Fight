@@ -1,0 +1,12 @@
+#screen dimensions
+SCREEN_WIDTH = 1100
+SCREEN_HEIGHT = 600
+TILE_SIZE = 64
+
+
+#gunman
+GUNMAN_WIDTH = 40
+GUNMAN_HEIGHT = 60
+
+
+
