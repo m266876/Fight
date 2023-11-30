@@ -21,7 +21,7 @@ LOADING_BG_RECT = LOADING.get_rect(center= (640,360))
 
 #part that loads
 loading_bar = pygame.image.load("filledloading.png")
-loading_bar_rect = loading.bar.get_rect(midleft=(280,360))
+loading_bar_rect = loading_bar.get_rect(midleft=(280,360))
 loading_finished = False
 loading_progress = 0
 loading_bar_width = 8

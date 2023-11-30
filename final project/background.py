@@ -1,5 +1,6 @@
 import pygame
 from parameters import *
+from platforms import *
 
 # Activate the pygame library.
 pygame.init()
@@ -12,54 +13,32 @@ scrn = pygame.display.set_mode((X, Y))
 pygame.display.set_caption('image')
 
 city = pygame.image.load("../final project/background/citybackground.png").convert()
-blocks = pygame.surface.Surface("../final project/background/blocks.png").convert()
+blocks = pygame.image.load("../final project/background/blocks.png").convert()
+rect = blocks.get_rect()
+
+
+
+# Draw the city background
+scrn.blit(city, (0, 0))
 
 def draw_background(surface):
     for x in range(0, SCREEN_WIDTH, TILE_SIZE):
-        surface.blit(blocks, (x, SCREEN_HEIGHT - TILE_SIZE))
-
-#platforms
-# Creating a new clock object to
-# track the amount of time
-clock = pygame.time.Clock()
-
-# Variable to store the
-# velocity of the platform
-platform_vel = 5
-
-# Starting coordinates of the platform
-x = 100
-y = 150
+        scrn.blit(blocks, (x, SCREEN_HEIGHT - TILE_SIZE))
 
 
-# Creating a rect with width
-# and height
-rect = blocks(x, y, 200, 50)
+def add_platforms(num_plat):
+    for _ in range(num_plat):
+        platforms.add(Platforms(random.randint(SCREEN_WIDTH, SCREEN_WIDTH + 60),
+                        random.randint(TILE_SIZE, SCREEN_HEIGHT - 2 * TILE_SIZE)))
 
-# Creating a boolean variable that
-# we will use to run the while loop
-run = True
+add_platforms(5)
+platforms.update()
+platforms.draw(scrn)
 
-# Creating an infinite loop
-# to run our game
-while run:
 
-    # Setting the frame rate to 30fps
-    clock.tick(30)
+# Draw the background
+draw_background(scrn)
 
-    # Multiplying platform_vel with -1
-    # if its x coordinate is less than 100
-    # or greater than or equal to 300.
-    if rect.left >= 300 or rect.left < 100:
-        platform_vel *= -1
-
-    # Adding platform_vel to x
-    # coordinate of our rect
-    rect.left += platform_vel
-
-    # Drawing the rect on the screen using the
-    # draw.rect() method
-    pygame.draw.rect(scrn, (255, 0, 0), rect)
 
 # Game loop
 running = True
@@ -68,16 +47,12 @@ while running:
         if event.type == pygame.QUIT:
             running = False
 
-    # Draw the background
-    draw_background(scrn)
-
-    # Draw the city background
-    scrn.blit(city, (0, 0))
 
     # Draw the text
-    custom_font = pygame.font.Font("../../chomp/assets/fonts/brushed.zip", 48)
-    text = custom_font.render("FIGHT", True, (255, 0, 0))
-    scrn.blit(text, (SCREEN_WIDTH / 5, SCREEN_HEIGHT / 10 - text.get_height() / 2))
+
+    #custom_font = pygame.font.Font("../../chomp/assets/fonts/brushed.zip", 48)
+    #text = custom_font.render("FIGHT", True, (255, 0, 0))
+    #scrn.blit(text, (SCREEN_WIDTH / 5, SCREEN_HEIGHT / 10 - text.get_height() / 2))
 
     # Update the display
     pygame.display.flip()

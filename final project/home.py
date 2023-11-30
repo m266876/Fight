@@ -1,7 +1,6 @@
 import pygame
 from parameters import *
 import button
-from loadingbar import *
 
 
 scrn = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -22,7 +21,7 @@ run = True
 while run:
     scrn.blit(menu_img, (0, 0))
     if play_image.draw(scrn):
-        scrn.blit('loadingbar.py')
+        break
     if exit_button.draw(scrn):
         pygame.quit()
 
@@ -30,9 +29,9 @@ while run:
         if event.type == pygame.QUIT:
             run = False
 
-    custom_font = pygame.font.Font("../final project/fonts/Black_Crayon.ttf", 48)
-    text = custom_font.render("FIGHT", True, (255, 0, 0))
-    scrn.blit(text, (SCREEN_WIDTH / 5, SCREEN_HEIGHT / 10 - text.get_height() / 2))
+   # custom_font = pygame.font.Font("../final project/fonts/Black_Crayon.ttf", 48)
+   # text = custom_font.render("FIGHT", True, (255, 0, 0))
+   # scrn.blit(text, (SCREEN_WIDTH / 5, SCREEN_HEIGHT / 10 - text.get_height() / 2))
 
     pygame.display.flip()
 

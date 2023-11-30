@@ -1,12 +1,24 @@
 #screen dimensions
 SCREEN_WIDTH = 1100
 SCREEN_HEIGHT = 600
-TILE_SIZE = 64
+TILE_SIZE = 32
 
+MIN_SPEED = 0.5
+MAX_SPEED = 3
+
+NUM_LIVES = 4
 
 #gunman
 GUNMAN_WIDTH = 40
 GUNMAN_HEIGHT = 60
+
+#loading bar stuff
+# Constants
+WIDTH, HEIGHT = 800, 600
+BAR_WIDTH = 400
+BAR_HEIGHT = 50
+BAR_COLOR = (0, 128, 255)
+FPS = 60
 
 
 

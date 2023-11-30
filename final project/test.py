@@ -1,63 +1,60 @@
 import pygame
+import sys
 
+# Initialize Pygame
 pygame.init()
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+# Constants
+WIDTH, HEIGHT = 800, 600
+BAR_WIDTH = 400
+BAR_HEIGHT = 50
+BAR_COLOR = (0, 128, 255)
+FPS = 60
 
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption("Spritesheets")
+# Create the Pygame window
+screen = pygame.display.set_mode((WIDTH, HEIGHT))
+pygame.display.set_caption("Fill Up Bar")
 
-# import sprite sheet
-sprite_sheet_image = pygame.image.load('../../chomp/assets/sprites/Run.png').convert()
-
-# clock object
 clock = pygame.time.Clock()
 
-RGB = (10, 150, 150)
-color = (247, 247, 247)
+def main():
+    bar_width = 0
+    start_time = pygame.time.get_ticks()
+    duration = 5000  # 5 seconds in milliseconds
 
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
 
-# get images
-def get_image(sheet, frame_x, frame_y, width, height, scale, color):
-    image = pygame.Surface((width, height)).convert()
-    image.set_colorkey((color))
-    image.blit(sheet, (0, 0), (frame_x * width, frame_y * height, width, height))
-    image = pygame.transform.scale(image, (width * scale, height * scale))
-    return image
+        # Calculate the elapsed time
+        elapsed_time = pygame.time.get_ticks() - start_time
 
+        # Update the bar width based on elapsed time
+        if elapsed_time < duration:
+            bar_width = int((elapsed_time / duration) * BAR_WIDTH)
+        else:
+            bar_width = BAR_WIDTH
 
-# loop through sprite sheet to get images
-all_frames = []
-idx = 0
+        # Clear the screen
+        screen.fill((255, 255, 255))
 
-for x in range(5):
-    for y in range(2):
-        all_frames.insert(idx, get_image(sprite_sheet_image, x, y, 172, 183, .5, color))
-        idx += 1
+        # Draw the bar
+        pygame.draw.rect(screen, BAR_COLOR, (WIDTH // 2 - BAR_WIDTH // 2, HEIGHT // 2 - BAR_HEIGHT // 2, bar_width, BAR_HEIGHT))
 
-run = True
-
-while run:
-
-    # update background
-    screen.fill(RGB)
-
-    # show frame image
-    for x in range(len(all_frames)):
-        screen.blit(all_frames[x], (x * 75, 0))
-
-        #uncomment these if you want to see the figure moving on the screen
-        screen.fill(RGB)
-        screen.blit(all_frames[x], (75, 0))
+        # Update the display
         pygame.display.flip()
-        clock.tick(30)
 
-    # event handler
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            run = False
+        # Cap the frame rate
+        clock.tick(FPS)
 
-    pygame.display.flip()
+        # Check if the duration has passed, and exit the loop
+        if elapsed_time >= duration + 1000:  # Add an extra second before exiting
+            break
 
-pygame.quit()
+    pygame.quit()
+    sys.exit()
+
+if __name__ == "__main__":
+    main()
