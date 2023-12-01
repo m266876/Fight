@@ -4,6 +4,7 @@ import random
 from parameters import *
 from background import *
 import button
+from bullets import *
 from gunman import *
 from zombie import *
 
@@ -98,58 +99,14 @@ def main():
             break
 
 
-
+LIVES1 = 3
+LIVES2 = 3
 
 
 
 #players
-class gunman(pygame.sprite.Sprite):
-    def __init__(self):
-        pygame.sprite.Sprite.__init__(self)
-        self.image = pygame.transform.scale(sprite_sheet_image, (50, 38))
-        self.image.set_colorkey((0, 0))
-        self.rect = self.image.get_rect()
-        self.rect.centerx = SCREEN_WIDTH / 2
-        self.rect.bottom = SCREEN_HEIGHT - 10
-        self.speedx = 0
-        self.speedy = 0
-        self.is_jumping = False
-        self.lives = 3  # Initial number of lives
-
-    def update(self):
-        if self.lives > 0:  # Check if lives are greater than 0
-            self.speedx = 0
-            keystate = pygame.key.get_pressed()
-
-            if keystate[pygame.K_a]:
-                self.speedx = -5
-            if keystate[pygame.K_d]:
-                self.speedx = 5
-
-            if not self.is_jumping and keystate[pygame.K_w]:
-                self.is_jumping = True
-                self.speedy = -5
-
-            if self.is_jumping:
-                self.rect.y += self.speedy
-                self.speedy += 0.2
-
-                if self.rect.bottom >= SCREEN_HEIGHT - TILE_SIZE:
-                    self.rect.bottom = SCREEN_HEIGHT - TILE_SIZE
-                    self.is_jumping = False
-                    self.speedy = 0
-
-            self.rect.x += self.speedx
-
-            if self.rect.right > SCREEN_WIDTH:
-                self.rect.right = SCREEN_WIDTH
-            if self.rect.left < 0:
-                self.rect.left = 0
-        else:
-            # Game over logic or other actions when lives are 0
-            pass
-
-    class zombie(pygame.sprite.Sprite):
+while lives1 > 0 and lives2 > 0 and running:
+    class gunman(pygame.sprite.Sprite):
         def __init__(self):
             pygame.sprite.Sprite.__init__(self)
             self.image = pygame.transform.scale(sprite_sheet_image, (50, 38))
@@ -160,19 +117,22 @@ class gunman(pygame.sprite.Sprite):
             self.speedx = 0
             self.speedy = 0
             self.is_jumping = False
-            self.lives = 3  # Initial number of lives
+            self.lives1 = 3  # Initial number of lives
+            self.hitbox = pygame.Rect(0,0,30,30)
+            self.hitbox.center = self.rect.center
+
 
         def update(self):
-            if self.lives > 0:  # Check if lives are greater than 0
+            if self.lives1 > 0:  # Check if lives are greater than 0
                 self.speedx = 0
                 keystate = pygame.key.get_pressed()
 
-                if keystate[pygame.K_LEFT]:
+                if keystate[pygame.K_a]:
                     self.speedx = -5
-                if keystate[pygame.K_RIGHT]:
+                if keystate[pygame.K_d]:
                     self.speedx = 5
 
-                if not self.is_jumping and keystate[pygame.K_UP]:
+                if not self.is_jumping and keystate[pygame.K_w]:
                     self.is_jumping = True
                     self.speedy = -5
 
@@ -192,16 +152,78 @@ class gunman(pygame.sprite.Sprite):
                 if self.rect.left < 0:
                     self.rect.left = 0
             else:
-                # Game over logic or other actions when lives are 0
+            # Game over logic or other actions when lives are 0
                 pass
+            self.hitbox.center = self.rect.center
+
+        def create_bullet(self):
+            return Bullet(gunman.rect.center()[0], pygame.mouse.get_pos()[1])
 
 
-gunman.update()
-zombie.update()
+
+        class zombie(pygame.sprite.Sprite):
+            def __init__(self):
+                pygame.sprite.Sprite.__init__(self)
+                self.image = pygame.transform.scale(sprite_sheet_image, (50, 38))
+                self.image.set_colorkey((0, 0))
+                self.rect = self.image.get_rect()
+                self.rect.centerx = SCREEN_WIDTH / 2
+                self.rect.bottom = SCREEN_HEIGHT - 10
+                self.speedx = 0
+                self.speedy = 0
+                self.is_jumping = False
+                self.lives2 = 3  # Initial number of lives
+                self.hitbox = pygame.Rect(0,0,30,30)
+                self.hitbox.center = self.rect.center
+
+            def update(self):
+                if self.lives2 > 0:  # Check if lives are greater than 0
+                    self.speedx = 0
+                    keystate = pygame.key.get_pressed()
+
+                    if keystate[pygame.K_LEFT]:
+                        self.speedx = -5
+                    if keystate[pygame.K_RIGHT]:
+                        self.speedx = 5
+
+                    if not self.is_jumping and keystate[pygame.K_UP]:
+                        self.is_jumping = True
+                        self.speedy = -5
+
+                    if self.is_jumping:
+                        self.rect.y += self.speedy
+                        self.speedy += 0.2
+
+                        if self.rect.bottom >= SCREEN_HEIGHT - TILE_SIZE:
+                            self.rect.bottom = SCREEN_HEIGHT - TILE_SIZE
+                            self.is_jumping = False
+                            self.speedy = 0
+
+                    self.rect.x += self.speedx
+
+                    if self.rect.right > SCREEN_WIDTH:
+                        self.rect.right = SCREEN_WIDTH
+                    if self.rect.left < 0:
+                        self.rect.left = 0
+                else:
+                # Game over logic or other actions when lives are 0
+                    pass
+                self.hitbox.center = self.rect.center
+
+            def create_bullet(self):
+                return Bullet(zombie.rect.center()[0], pygame.mouse.get_pos()[1])
+
+    platforms.update()
+    gunman.update()
+    zombie.update()
 
 
 #score
+#more bullet stuff
 
+bullet_group = pygame.sprite.Group()
+bullet_ready = False
+bullet_group = []
 
 #loopity loop loop
 running = True
@@ -210,15 +232,20 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        if event.type == pygame.K_F:
+            bullet_group.add(gunman.create_bullet())
+        if event.type == pygame.K_CTRL:
+            bullet_group.add(zombie.create_bullet())
 
     sprites.update()
 
     scrn.fill(city)
     sprites.draw(scrn)
+    bullet_group.draw(scrn)
     pygame.display.flip()
 
 
-
+#game over
 scrn.blit(background, (0, 0))
 font = pygame.font.Font("../final project/fonts/Brainfish_Rush.ttf")
 #show game over message

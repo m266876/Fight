@@ -34,4 +34,5 @@ class Platforms(pygame.sprite.Sprite):
     def draw(self, surf):
         surf.blit(self.image, self.rect)
 
+
 platforms = pygame.sprite.Group()

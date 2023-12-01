@@ -28,16 +28,17 @@ def draw_background(surface):
 
 def add_platforms(num_plat):
     for _ in range(num_plat):
-        platforms.add(Platforms(random.randint(SCREEN_WIDTH, SCREEN_WIDTH + 60),
+        platforms.add(Platforms(random.randint(0, SCREEN_WIDTH - 10),
                         random.randint(TILE_SIZE, SCREEN_HEIGHT - 2 * TILE_SIZE)))
 
 add_platforms(5)
 platforms.update()
-platforms.draw(scrn)
+#platforms.draw(scrn)
 
 
 # Draw the background
 draw_background(scrn)
+platforms.draw(scrn)
 
 
 # Game loop

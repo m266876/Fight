@@ -72,21 +72,6 @@ pygame.quit()
 
 
 
-
-#dont look down yet
-#class Bullet(pygame.sprite.Sprite):
-   # def __init__(self):
-        #pygame.sprite.Sprite.__init__(self)
-        #self.image = pygame.Surface
-
-
-
-#hits = pygame.sprite.spritecollide(gunman, zombie, False)
-#if hits:
-    #run = False
-
-
-
 #healthbar
 
 #class HealthBar():
@@ -115,25 +100,7 @@ pygame.quit()
 
 
 
-#from background import *
 
-# Initialize Pygame
-#pygame.init()
-
-# Constants
-#FPS = 60
-
-# Colors
-#WHITE = (255, 255, 255)
-
-# Player settings
-#gunman_width = 40
-##player_x = SCREEN_WIDTH // 2 - gunman_width // 2
-#player_y = SCREEN_HEIGHT - gunman_height
-#gunman_speed = 5
-#jump_velocity = -15
-#gravity = 1
-#is_jumping = False
 
 
 
