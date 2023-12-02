@@ -12,6 +12,12 @@ pygame.display.set_caption("FIGHT")
 clock = pygame.time.Clock()
 FPS = 60
 
+#define game variables
+intro_count = 3
+last_count_update = pygame.time.get_ticks()
+score = [0,0]#player scores, [gunman, zombie]
+round_over = False
+ROUND_OVER_COOLDOWN = 2000
 
 background = pygame.image.load("../final project/background/citybackground.png").convert_alpha()
 
@@ -23,6 +29,16 @@ zombie_sheet = pygame.image.load("../final project/sprites/zombie_spritesheet.pn
 #number of steps in each animation
 GUNMAN_STEPS = [3,4,3,4,7,8]
 ZOMBIE_STEPS = [4,5,3,4,5,7]
+
+#define font
+count_font = pygame.font.Font("../final project/fonts/fightfont.ttf", 80)
+score_font = pygame.font.Font("../final project/fonts/fightfont.ttf", 30)
+
+#function for drawing text
+def draw_text(text, font, text_color, x, y):
+    img = font.render(text, True, text_color)
+    scrn.blit(img, (x, y))
+
 
 
 def draw_bg():
@@ -37,8 +53,8 @@ def draw_health_bar(health,x,y):
     pygame.draw.rect(scrn, YELLOW, (x, y, 400 * ratio, 30))
 
 #Players
-gunman = Players(200, 310, False, GUNMAN_DATA, gunman_sheet, GUNMAN_STEPS)
-zombie = Players(700, 310, True, ZOMBIE_DATA, zombie_sheet, ZOMBIE_STEPS)
+gunman = Players(1,200, 310, False, GUNMAN_DATA, gunman_sheet, GUNMAN_STEPS)
+zombie = Players(2,700, 310, True, ZOMBIE_DATA, zombie_sheet, ZOMBIE_STEPS)
 
 
 
@@ -55,17 +71,41 @@ while run:
     draw_health_bar(gunman.health, 20, 20)
     draw_health_bar(zombie.health, 680, 20)
 
-    #move players
-    gunman.move(SCREEN_WIDTH, SCREEN_HEIGHT, scrn, zombie)
+    #update countdown
+    if intro_count <= 0:
+        # move players
+        gunman.move(SCREEN_WIDTH, SCREEN_HEIGHT, scrn, zombie)
+        zombie.move(SCREEN_WIDTH, SCREEN_HEIGHT, scrn, gunman)
+    else:
+        #display count timer
+        draw_text(str(intro_count), count_font, RED, SCREEN_WIDTH / 2, SCREEN_HEIGHT / 3)
+        #update count timer
+        if (pygame.time.get_ticks() - last_count_update) >= 1000:
+            intro_count -= 1
+            last_count_update = pygame.time.get_ticks()
+
+
+
 
     #update players
     gunman.update()
-    zombie.update()r
+    zombie.update()
 
 
+    #draw players
     gunman.draw(scrn)
     zombie.draw(scrn)
-    #draw players
+
+    #check for player defeat
+    if round_over == False:
+        if gunman.alive == False:
+            score[1] += 1
+            round_over = True
+            round_over_time = pygame.time.get_ticks()
+        elif zombie.alive == False:
+            score[0] += 1
+            round_over = True
+            round_over_time = pygame.time.get_ticks()
 
     #event handler
     for event in pygame.event.get():
