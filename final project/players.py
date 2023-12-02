@@ -16,8 +16,10 @@ class Players():
         self.vel_y = 0
         self.running = False
         self.jump = False
-        self.attacking = False
+        self.attack = False
         self.attack_type = 0
+        self.attack_cooldown = 0
+        self.hit = False
         self.health = 100
 
     def load_images(self, sprite_sheet, animation_steps):
@@ -45,7 +47,7 @@ class Players():
 
 
         #can only do other stuff if not currently attacking
-        if self.attacking == False:
+        if self.attack == False:
 
             #movement
             if key[pygame.K_a]:
@@ -91,6 +93,11 @@ class Players():
         else:
             self.flip = True
 
+        #apply attack cooldown
+        if self.attack_cooldown > 0:
+            self.attack_cooldown -= 1
+
+
         #update player positions
         self.rect.x += dx
         self.rect.y += dy
@@ -98,24 +105,24 @@ class Players():
     #animation updates
     def update(self):
         #check which action the player is performing
-        if self.attacking == True:
+        if self.hit == True:
+            self.update_action(5) #5 hit
+        elif self.attack == True:
             if self.attack_type == 1:
-                self.update_action(3)
+                self.update_action(3) #3 attack 1
             elif self.attack_type == 2:
-                self.update_action(4)
-            elif self.jump == True:
-                self.update_action(2)
-            elif self.running == True:
-                self.update_action(1)
-            else:
-                self.update_action(0)
+                self.update_action(4) #4 attack 2
+        elif self.jump == True:
+            self.update_action(2) #3 jump
+        elif self.running == True:
+            self.update_action(1) #1run
+        else:
+            self.update_action(0) #0 idle
 
 
 
 
         animation_cooldown = 50
-
-
 
         #update image
         self.image = self.animation_list[self.action][self.frame_index]
@@ -126,16 +133,28 @@ class Players():
         #check if the animation has finished
         if self.frame_index >= len(self.animation_list[self.action]):
             self.frame_index = 0
+            #check if an attack was executed
+            if self.action == 3 or self.action == 4:
+                self.attack = False
+                self.attack_cooldown = 20
+            #check if damage was taken
+            if self.action == 5:
+                self.hit = False
+                #if the player was in the middle of an attack, then the attack is stopped
+                self.attack = False
+                self.attack_cooldown = 20
+
 
 
     #attack method
     def attack(self, surface, target):
-        self.attacking = True
-        attack_rect = pygame.Rect(self.rect.centerx - (2 * self.rect.width * self.flip), self.rect.y, 2 * self.rect.width, self.rect.height)
-        if attack_rect.colliderect(target.rect):
-            target.health -= 10
-
-        pygame.draw.rect(surface, (0,255,0), attack_rect)
+        if self.attack_cooldown == 0:
+            self.attack = True
+            attack_rect = pygame.Rect(self.rect.centerx - (2 * self.rect.width * self.flip), self.rect.y, 2 * self.rect.width, self.rect.height)
+            if attack_rect.colliderect(target.rect):
+                target.health -= 10
+                target.hit = True
+            pygame.draw.rect(surface, (0,255,0), attack_rect)
 
     def update_action(self, new_action):
         #check if new action is different to the previous one

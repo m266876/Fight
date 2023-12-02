@@ -60,7 +60,7 @@ while run:
 
     #update players
     gunman.update()
-    zombie.update()
+    zombie.update()r
 
 
     gunman.draw(scrn)
