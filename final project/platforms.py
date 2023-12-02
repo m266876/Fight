@@ -3,11 +3,7 @@ import random
 import sys
 from parameters import *
 
-scrn = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-pygame.display.set_caption('image')
-city = pygame.image.load("../final project/background/citybackground.png").convert()
-blocks = pygame.image.load("../final project/background/blocks.png").convert()
-rect = blocks.get_rect()
+#blocks = pygame.image.load("../final project/background/blocks.png").convert()
 
 #create a pygame sprite class for the platforms
 class Platforms(pygame.sprite.Sprite):

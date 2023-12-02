@@ -5,17 +5,12 @@ from platforms import *
 # Activate the pygame library.
 pygame.init()
 
-X = SCREEN_WIDTH
-Y = SCREEN_HEIGHT
-
-# Create the display surface object of specific dimensions (X, Y).
-scrn = pygame.display.set_mode((X, Y))
-pygame.display.set_caption('image')
 
 city = pygame.image.load("../final project/background/citybackground.png").convert()
 blocks = pygame.image.load("../final project/background/blocks.png").convert()
 rect = blocks.get_rect()
-
+#
+scrn = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 
 
 # Draw the city background
@@ -23,7 +18,7 @@ scrn.blit(city, (0, 0))
 
 def draw_background(surface):
     for x in range(0, SCREEN_WIDTH, TILE_SIZE):
-        scrn.blit(blocks, (x, SCREEN_HEIGHT - TILE_SIZE))
+        surface.blit(blocks, (x, SCREEN_HEIGHT - TILE_SIZE))
 
 
 def add_platforms(num_plat):
@@ -31,8 +26,6 @@ def add_platforms(num_plat):
         platforms.add(Platforms(random.randint(0, SCREEN_WIDTH - 10),
                         random.randint(TILE_SIZE, SCREEN_HEIGHT - 2 * TILE_SIZE)))
 
-add_platforms(5)
-platforms.update()
 #platforms.draw(scrn)
 
 

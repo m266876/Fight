@@ -1,5 +1,5 @@
 import pygame
-from background import *
+#from background import *
 
 
 
@@ -20,7 +20,7 @@ color = (247, 247, 247)
 
 
 # get images
-def get_image(sheet, frame_x, frame_y, width, height):
+def get_image(sheet, frame_x, 0, width, height):
     image = pygame.Surface((width, height)).convert()
     image.set_colorkey((color))
     image.blit(sheet, (0, 0), (frame_x * width, 0, width, height))
@@ -56,6 +56,10 @@ while run:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
+
+
+
+
 
     pygame.display.flip()
 

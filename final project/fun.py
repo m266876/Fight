@@ -2,11 +2,12 @@ import pygame
 import sys
 import random
 from parameters import *
-from background import *
+from background import draw_background, add_platforms
 import button
 from bullets import *
 from gunman import *
 from zombie import *
+from home import homescreen
 
 pygame.init()
 pygame.mixer.init()
@@ -15,8 +16,13 @@ clock = pygame.time.Clock()
 
 scrn = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption('PLAY')
+city = pygame.image.load("../final project/background/citybackground.png").convert()
 
 #HOME SCREEN
+#while True:
+#    print('here')
+#    homescreen()
+
 #button images
 play_btn = pygame.image.load('../final project/sprites/1.png').convert_alpha()
 exit_img = pygame.image.load('../final project/sprites/16.png').convert_alpha()
@@ -51,6 +57,7 @@ while run_home_screen:
 
 background = scrn.copy()
 draw_background(background)
+add_platforms(5)
 
 # Game loop
 running = True
