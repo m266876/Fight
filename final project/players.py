@@ -2,14 +2,14 @@ import pygame
 from parameters import *
 
 class Players():
-    def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps):
+    def __init__(self, player, x, y, flip, data, sprite_sheet, animation_steps, sound):
         self.player = player
         self.size = data[0]
         self.image_scale = data[1]
         #self.offset = data[2]
         self.flip = flip
         self.animation_list = self.load_images(sprite_sheet, animation_steps)
-        self.action = 0 #0:idle 1:run 2:jump 3:attack1 4:attack4 5:hit 6:death
+        self.action = 0 #0:idle 1:run 2:jump 3:attack1 4:attack2 5:hit 6:death
         self.frame_index = 0
         self.image = self.animation_list[self.action][self.frame_index]
         self.update_time = pygame.time.get_ticks()
@@ -20,6 +20,7 @@ class Players():
         self.attacking = False
         self.attack_type = 0
         self.attack_cooldown = 0
+        self.soundfx = sound
         self.hit = False
         self.health = 100
         self.alive = True
@@ -35,7 +36,7 @@ class Players():
             animation_list.append(temp_img_list)
         return animation_list
 
-    def move(self, screen_width, screen_height, surface, target):
+    def move(self, screen_width, screen_height, surface, target, round_over):
         speed = SPEED
         gravity = GRAVITY
         dx = 0
@@ -49,7 +50,7 @@ class Players():
 
 
         #can only do other stuff if not currently attacking
-        if self.attacking == False and self.alive == True:
+        if self.attacking == False and self.alive == True and round_over == False:
             #check gunman controls
             if self.player == 1:
                 #movement
@@ -94,7 +95,7 @@ class Players():
 
             # attack
             if key[pygame.K_KP1] or key[pygame.K_KP2]:
-                self.attack(surface, target)
+                self.attack(surface, target) #delete surface after fixing sprites
 
                 # determine which attack was used
                 if key[pygame.K_KP1]:
@@ -185,11 +186,12 @@ class Players():
     def attack(self, surface, target):
         if self.attack_cooldown == 0:
             self.attacking = True
+            self.soundfx.play()
             attacking_rect = pygame.Rect(self.rect.centerx - (2 * self.rect.width * self.flip), self.rect.y, 2 * self.rect.width, self.rect.height)
             if attacking_rect.colliderect(target.rect):
                 target.health -= 10
                 target.hit = True
-            pygame.draw.rect(surface, (0,255,0), attacking_rect)
+            pygame.draw.rect(surface, (0,255,0), attacking_rect) #get rid of after I fix sprites & get rid of surface
 
     def update_action(self, new_action):
         #check if new action is different to the previous one
@@ -204,5 +206,5 @@ class Players():
 
     def draw(self, surface):
         img = pygame.transform.flip(self.image, self.flip, False)
-        pygame.draw.rect(surface, (255,0,0), self.rect)
+        pygame.draw.rect(surface, (255,0,0), self.rect) #get rid of after I fix sprites
         surface.blit(img, (self.rect.x, self.rect.y))
