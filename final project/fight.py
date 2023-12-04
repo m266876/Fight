@@ -34,7 +34,7 @@ background = pygame.image.load("../final project/background/citybackground.png")
 blocks = pygame.image.load("../final project/background/blocks.png").convert_alpha()
 
 #load spritesheets
-gunman_sheet = pygame.image.load("../final project/sprites/gunman_spritesheet_old.png").convert_alpha()
+gunman_sheet = pygame.image.load("../final project/sprites/gunman_spritesheet_1.png").convert_alpha()
 zombie_sheet = pygame.image.load("../final project/sprites/zombie_spritesheet_old.png").convert_alpha()
 
 #victory image
@@ -135,7 +135,7 @@ while run:
             round_over_time = pygame.time.get_ticks()
     else:
         #display the victory message
-        scrn.blit(victoryimg,360,150)
+        scrn.blit(victoryimg,(125,75))
         if pygame.time.get_ticks() - round_over_time > ROUND_OVER_COOLDOWN:
             round_over = False
             intro_count = 3

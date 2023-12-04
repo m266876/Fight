@@ -13,7 +13,7 @@ class Players():
         self.frame_index = 0
         self.image = self.animation_list[self.action][self.frame_index]
         self.update_time = pygame.time.get_ticks()
-        self.rect = pygame.Rect((x, y, 80, 180))
+        self.rect = pygame.Rect((x, y, 60, 120))
         self.vel_y = 0
         self.running = False
         self.jump = False
@@ -94,13 +94,13 @@ class Players():
                 # dy += self.vel_y
 
             # attack
-            if key[pygame.K_KP1] or key[pygame.K_KP2]:
+            if key[pygame.K_n] or key[pygame.K_m]:
                 self.attack(surface, target) #delete surface after fixing sprites
 
                 # determine which attack was used
-                if key[pygame.K_KP1]:
+                if key[pygame.K_n]:
                     self.attack_type = 1
-                if key[pygame.K_KP2]:
+                if key[pygame.K_m]:
                     self.attack_type = 2
 
         #apply gravity
@@ -138,7 +138,7 @@ class Players():
         if self.health <= 0:
             self.health = 0
             self.alive = False
-            self.update_action(6) #death
+            self.update_action(5) #death
         elif self.hit == True:
             self.update_action(5) #5 hit
         elif self.attacking == True:
@@ -166,7 +166,7 @@ class Players():
         if self.frame_index >= len(self.animation_list[self.action]):
             #check if player is dead to end animation
             if self.alive == False:
-                self.frame_index >= len(self.animation_list[self.action]) - 1
+                self.frame_index = len(self.animation_list[self.action]) - 1
             else:
                 self.frame_index = 0
             #check if an attack was executed
